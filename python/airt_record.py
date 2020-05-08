@@ -1,11 +1,11 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # Import Packages
 import numpy as np
 import os
 from matplotlib import pyplot as plt
 import SoapySDR
-from SoapySDR import SOAPY_SDR_RX, SOAPY_SDR_CS16
+from SoapySDR import SOAPY_SDR_RX, SOAPY_SDR_CS16, errToStr
 
 ########################################################################################
 # Settings
@@ -51,7 +51,7 @@ while file_ctr < nfiles:
 
     # Make sure that the proper number of samples was read
     rc = sr.ret
-    assert rc == N, 'Error Reading Samples from Device (error code = %d)!' % rc
+    assert rc == N, 'Error {}: {}'.format(rc.ret, errToStr(rc.ret))
 
     # Write buffer to multiple files. Reshaping the rx_buffer allows for iteration
     for file_data in rx_buff.reshape(files_per_buffer, real_samples_per_file):
@@ -79,7 +79,7 @@ sdr.closeStream(rx_stream)
 
 nrow = 2
 ncol = np.ceil(float(nfiles) / float(nrow)).astype(int)
-fig, axs = plt.subplots(nrow, ncol, figsize=(11, 11), sharex=True, sharey=True)
+fig, axs = plt.subplots(nrow, ncol, figsize=(11, 11), sharex='all', sharey='all')
 for ax, file_name in zip(axs.flatten(), file_names):
     # Read data from current file
     s_interleaved = np.fromfile(file_name, dtype=np.int16)

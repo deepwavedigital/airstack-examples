@@ -1,9 +1,8 @@
-#! /usr/bin/env python
-# Import Packages
+#! /usr/bin/env python3
 import numpy as np
 from matplotlib import pyplot as plt
 import SoapySDR
-from SoapySDR import SOAPY_SDR_RX, SOAPY_SDR_CS16
+from SoapySDR import SOAPY_SDR_RX, SOAPY_SDR_CS16, errToStr
 
 ############################################################################################
 # Settings
@@ -33,8 +32,8 @@ sdr.activateStream(rx_stream)  # this turns the radio on
 
 # Read the samples from the data buffer
 sr = sdr.readStream(rx_stream, [rx_buff], N, timeoutUs=timeout_us)
-rc = sr.ret # number of samples read or the error code
-assert rc == N, 'Error Reading Samples from Device (error code = %d)!' % rc
+rc = sr.ret  # number of samples read or the error code
+assert rc == N, 'Error {}: {}'.format(rc.ret, errToStr(rc.ret))
 
 # Stop streaming
 sdr.deactivateStream(rx_stream)
@@ -51,7 +50,7 @@ s = (s0[::2] + 1j*s0[1::2])
 S = np.fft.fftshift(np.fft.fft(s, N) / N)
 
 # Time Domain Plot
-plt.figure(num=1, figsize=(12.95, 7.8), dpi=150)
+plt.figure(num=1, figsize=(11, 8.5))
 plt.subplot(211)
 t_us = np.arange(N) / fs / 1e-6
 plt.plot(t_us, s.real, 'k', label='I')

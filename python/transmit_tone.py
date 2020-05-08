@@ -2,7 +2,7 @@
 
 """
 Transmits a tone out of the AIR-T. The script will create a tone segment that is
-infinitly repeatable without a phase discontunity and with 8 samples per period.
+infinity repeatable without a phase discontinuity and with 8 samples per period.
 The TX LO of the AIR-T is set such that the baseband frequency of the generated
 tone plus the LO frequency will transmit at the desired RF.
 """
@@ -17,10 +17,10 @@ def make_tone(n, fcen, fs, phi=0.285):
     """
     Generates tone signal window with a frequency that is an integer
     multiple of the sample rate so it can be repeated without a phase
-    discontinuity. Use the a variable to turn off and on I and Q.
+    discontinuity.
     """
     period = fs / fcen
-    assert n % period == 0, 'Total samples not integer number of periods'
+    assert n % period == 0, 'Total samples is not an integer number of periods'
     a = 2**15
     # Make Complex Valued Tone Signal
     wt = np.array(2 * np.pi * fcen * np.arange(n) / fs)
@@ -41,8 +41,8 @@ def transmit_tone(freq, chan=0, fs=31.25, gain=-20, buff_len=16384):
     
     # Setup Radio
     sdr = SoapySDR.Device()  # Create AIR-T instance
-    sdr.setSampleRate(SOAPY_SDR_TX, chan, fs)          # Set sample rate
-    sdr.setFrequency(SOAPY_SDR_TX, chan, lo_freq)         # Tune the LO
+    sdr.setSampleRate(SOAPY_SDR_TX, chan, fs)  # Set sample rate
+    sdr.setFrequency(SOAPY_SDR_TX, chan, lo_freq)  # Tune the LO
     sdr.setGain(SOAPY_SDR_TX, chan, gain)
     
     tx_stream = sdr.setupStream(SOAPY_SDR_TX, SOAPY_SDR_CS16, [chan])
