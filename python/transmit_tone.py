@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+#
+# Copyright 2020, Deepwave Digital, Inc.
+# SPDX-License-Identifier: BSD-3-Clause
 
 """
 Transmits a tone out of the AIR-T. The script will create a tone segment that is
@@ -38,16 +41,16 @@ def transmit_tone(freq, chan=0, fs=31.25, gain=-20, buff_len=16384):
     bb_freq = fs / 8  # baseband frequency of tone
     tx_buff = make_tone(buff_len, bb_freq, fs)
     lo_freq = freq - bb_freq  # Calc LO freq to put tone at tone_rf
-    
+
     # Setup Radio
     sdr = SoapySDR.Device()  # Create AIR-T instance
     sdr.setSampleRate(SOAPY_SDR_TX, chan, fs)  # Set sample rate
     sdr.setFrequency(SOAPY_SDR_TX, chan, lo_freq)  # Tune the LO
     sdr.setGain(SOAPY_SDR_TX, chan, gain)
-    
+
     tx_stream = sdr.setupStream(SOAPY_SDR_TX, SOAPY_SDR_CS16, [chan])
     sdr.activateStream(tx_stream)  # this turns the radio on
-    
+
     # Transmit
     print('Now Transmitting')
     while True:
@@ -57,7 +60,7 @@ def transmit_tone(freq, chan=0, fs=31.25, gain=-20, buff_len=16384):
                 print('TX Error {}: {}'.format(rc.ret, errToStr(rc.ret)))
         except KeyboardInterrupt:
             break
-    
+
     # Stop streaming
     sdr.deactivateStream(tx_stream)
     sdr.closeStream(tx_stream)

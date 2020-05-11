@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+#
+# Copyright 2020, Deepwave Digital, Inc.
+# SPDX-License-Identifier: BSD-3-Clause
 
 # Import Packages
 import numpy as np

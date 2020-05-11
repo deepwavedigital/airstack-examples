@@ -1,4 +1,8 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
+#
+# Copyright 2020, Deepwave Digital, Inc.
+# SPDX-License-Identifier: BSD-3-Clause
+
 import numpy as np
 from matplotlib import pyplot as plt
 import SoapySDR
