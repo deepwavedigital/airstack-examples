@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+#
+# Copyright 2020, Deepwave Digital, Inc.
+# SPDX-License-Identifier: BSD-3-Clause
 
 """
-Copyright 2020, Deepwave Digital, Inc.
-
 This application is used as an example on how to deploy a neural network for inference
 on the AIR-T. The application assumes that the network has been optimized using TensorRT
 to create a plan file. The method provided here leverages the pyCUDA interface for the
@@ -65,7 +66,7 @@ def main():
     sdr.setFrequency(SOAPY_SDR_RX, CHANNEL, CENTER_FREQ)
     rx_stream = sdr.setupStream(SOAPY_SDR_RX, SOAPY_SDR_CF32, [CHANNEL])
     sdr.activateStream(rx_stream)
-    
+
     # Start receiving signals and performing inference
     print('Receiving Data')
     ctr = 0
@@ -78,7 +79,7 @@ def main():
                 continue
             # Run samples through neural network
             dnn.feed_forward()
-            
+
             output_arr = dnn.output_buff.host  # Get data from DNN output layer
             """ Do something useful here with output array """
             # Run sanity check to make sure neural network output matches numpy result

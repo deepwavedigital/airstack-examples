@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
+#
+# Copyright 2020, Deepwave Digital, Inc.
+# SPDX-License-Identifier: BSD-3-Clause
 
 """
-Copyright 2020, Deepwave Digital, Inc.
-
-This script converts a uff file to a optimized plan file using NVIDIA's TensorRT. It
-must be executed on the platform that will be used for inference, i.e., the AIR-T.
+This script converts a ".uff" model file to a optimized plan file using
+NVIDIA's TensorRT. It must be executed on the platform that will be used
+for inference, i.e., the AIR-T.
 """
 
 import tensorrt as trt

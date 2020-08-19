@@ -1,6 +1,8 @@
-"""
-Copyright 2020, Deepwave Digital, Inc.
+#
+# Copyright 2020, Deepwave Digital, Inc.
+# SPDX-License-Identifier: BSD-3-Clause
 
+"""
 Utility functions and classes for memory management and TensorRT inference on the AIR-T.
 """
 
@@ -93,7 +95,7 @@ class TrtInferFromPlan:
             print('  Receiver Output Size : {:,} samples'.format(sdr_out_size))
             print('  TensorRT Input Size  : {:,} samples'.format(trt_in_size))
             print('  TensorRT Output Size : {:,} samples'.format(trt_out_size))
-            
+
 
     def feed_forward(self):
         """ Forward propagate input_buffer through neural network. Call this method
