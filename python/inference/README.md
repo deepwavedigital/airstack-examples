@@ -6,6 +6,8 @@ power across each batch for the input buffer.
 
 All python packages and dependencies are pre-installed on the AirStack 0.3.0+.
 
+Note that the UFF parser does not support TensorFlow 2.0+ so we recommend using TensorFlow 1.X.
+
 ## Author
 <p align="center">
 <img src="https://deepwavedigital.com/media/images/dwd2_crop_transparent.png" Width="50%" />
@@ -67,7 +69,7 @@ However, instead of computing the summation above, the first layer squares each 
 the interleaved I/Q input array:
 ```
 layer1 = tf.math.pow(batch_x, 2, name='power')
-``` 
+```
 and the second layer uses a matrix multiplication with a normalization factor to compute
 the average power.
 ```
