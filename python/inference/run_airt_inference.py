@@ -18,7 +18,7 @@ from SoapySDR import Device, SOAPY_SDR_RX, SOAPY_SDR_CF32, SOAPY_SDR_OVERFLOW
 
 # Top-level inference settings.
 CPLX_SAMPLES_PER_INFER = 2048  # This should be half input_len from the neural network
-PLAN_FILE_NAME = 'avg_pow_net.plan'  # Plan file created from uff2plan.py
+PLAN_FILE_NAME = 'pytorch/avg_pow_net.plan'  # Plan file created from uff2plan.py
 BATCH_SIZE = 128  # Must be less than or equal to max_batch_size from uff2plan.py
 NUM_BATCHES = 16  # Number of batches to run. Set to float('Inf') to run continuously
 
@@ -28,14 +28,14 @@ CENTER_FREQ = 2400e6  # AIR-T Receiver center frequency
 CHANNEL = 0  # AIR-T receiver channel
 
 
-def passed_test(buff_arr, tf_result):
+def passed_test(buff_arr, result):
     """ Make sure numpy calculation matches TensorFlow calculation. Returns True if the
      numpy calculation matches the TensorFlow calculation"""
     buff = buff_arr.reshape(BATCH_SIZE, -1)  # Reshape so first dimension is batch_size
     sig = buff[:, ::2] + 1j*buff[:, 1::2]  # Convert to complex valued array
     wlen = float(sig.shape[1])  # Normalization factor
     np_result = np.sum((sig.real**2) + (sig.imag**2), axis=1) / wlen
-    return np.allclose(np_result, tf_result)
+    return np.allclose(np_result, result)
 
 
 def main():
@@ -66,7 +66,7 @@ def main():
     sdr.setFrequency(SOAPY_SDR_RX, CHANNEL, CENTER_FREQ)
     rx_stream = sdr.setupStream(SOAPY_SDR_RX, SOAPY_SDR_CF32, [CHANNEL])
     sdr.activateStream(rx_stream)
-
+    
     # Start receiving signals and performing inference
     print('Receiving Data')
     ctr = 0
@@ -79,7 +79,7 @@ def main():
                 continue
             # Run samples through neural network
             dnn.feed_forward()
-
+            
             output_arr = dnn.output_buff.host  # Get data from DNN output layer
             """ Do something useful here with output array """
             # Run sanity check to make sure neural network output matches numpy result

@@ -19,6 +19,7 @@ INPUT_NODE_DIMS = (1, 1, 4096)  # Input layer dimensions of dnn
 MAX_BATCH_SIZE = 128  # Maximum batch size for which plan file will be optimized
 MAX_WORKSPACE_SIZE = 1073741824  # 1 GB for example
 FP16_MODE = True  # Use float16 if possible (all layers may not support this)
+LOGGER = trt.Logger(trt.Logger.VERBOSE)
 
 
 def main():
@@ -29,7 +30,7 @@ def main():
         os.remove(plan_file)
 
     # Setup TensorRT builder and create network
-    builder = trt.Builder(trt.Logger(trt.Logger.INFO))
+    builder = trt.Builder(LOGGER)
     network = builder.create_network()
 
     # Parse the UFF file

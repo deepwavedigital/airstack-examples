@@ -18,13 +18,13 @@ http://docs.deepwavedigital.com/AirStack/airstack.html
 """
 
 import numpy as np
-import tensorflow as tf
-import uff
+import tensorflow.compat.v1 as tf
+from tf2onnx import tfonnx
 
 
 # Top-level neural network settings
 CPLX_SAMPLES_PER_INFER = 2048  # This should be half input_len from the neural network
-UFF_FILE_NAME = 'avg_pow_net.uff'  # File name to save network
+ONNX_FILE_NAME = 'avg_pow_net.onnx'  # File name to save network
 INPUT_NODE_NAME = 'input_buffer'  # User defined name of input node
 OUTPUT_NODE_NAME = 'output_buffer'  # User defined name of output node
 
@@ -44,7 +44,7 @@ def neural_network(batch_x, input_len, output_node_name=OUTPUT_NODE_NAME):
         output: average power tensor, i.e., avg(sig.real^2 + sig.imag^2)
     """
     # Create tensorflow layer that squares each sample independently
-    layer1 = tf.math.square(batch_x, name='hidden_layer')
+    layer1 = tf.math.pow(batch_x, 2.0)
     # Create layer2 that uses a matrix multiplication to multiply each squared sample by
     # a normalization factor then sums all samples to compute the average of layer1.
     norm_factor = 1.0 / (float(input_len) / 2.0)
@@ -54,18 +54,15 @@ def neural_network(batch_x, input_len, output_node_name=OUTPUT_NODE_NAME):
     return layer2
 
 
-def sess2uff(sess, out_node_name=OUTPUT_NODE_NAME, uff_file_name=UFF_FILE_NAME,
-             quiet=True):
-    """ Converts the session to a uff file and writes it to filename """
+def sess2onnx(sess, out_node_name=OUTPUT_NODE_NAME, onnx_file_name=ONNX_FILE_NAME):
+    """ Converts the session to an onnx file and writes it to filename """
     # Convert computational graph to protobuf (graph_def)
-    graph_def = sess.graph.as_graph_def()
-    # Freeze all constants. Note this is actually not necessary for this example
-    # because there are no variables (tf.Variable), but we leave it hear as an example.
-    frozen_graph_def = tf.graph_util.convert_variables_to_constants(sess, graph_def,
-                                                                    [out_node_name])
-    # Convert frozen graph to a uff file
-    uff.from_tensorflow(frozen_graph_def, [out_node_name], quiet=quiet,
-                        output_filename=uff_file_name)
+    onnx_graph = tfonnx.process_tf_graph(sess.graph,
+                                         output_names=[out_node_name + ':0'])
+    model_proto = onnx_graph.make_model('onnx_model')
+    # Write model to file
+    with open(onnx_file_name, 'wb') as f:
+        f.write(model_proto.SerializeToString())
 
 
 def passed_test(buff, tf_result):
@@ -77,18 +74,17 @@ def passed_test(buff, tf_result):
     if np_result.shape != tf_result.shape:
         raise ValueError('Output shape mismatch: numpy = {}, tensorflow = {}'.
                          format(np_result.shape, tf_result.shape))
-    print(np_result[0], tf_result[0])
     return np.allclose(np_result, tf_result)
 
 
 def main():
     # Define input length of neural network. Should be 2 x number of complex samples
     input_len = 2 * CPLX_SAMPLES_PER_INFER
-
+    
     # Create test data in range of (-1, 1) for forward propagation test
     batch_size = 128  # Batch size to use for testing and validation here
     buff = np.random.randn(batch_size, input_len).astype(np.float32)
-
+    
     # Create TensorFlow Computational Graph
     with tf.Graph().as_default() as graph:
         input_data = tf.placeholder(tf.float32, shape=(None, input_len),
@@ -99,17 +95,18 @@ def main():
     with tf.Session(graph=graph) as sess:
         result = sess.run(network, feed_dict={input_data: buff})
         if passed_test(buff, result):
-            # Create UFF file
-            sess2uff(sess)
+            # Create ONNX file
+            sess2onnx(sess)
             # Print useful information for creating a plan file
-            print('Input buffer shape: {}'.format(buff.shape))
+            print('\nInput buffer shape: {}'.format(buff.shape))
             print('Output buffer shape: {}'.format(result.shape))
             print('Passed Test\n')
             print('Network Parameters optimization and inference on AIR-T:')
-            print('CPLX_SAMPLES_PER_INFER = {}'.format(CPLX_SAMPLES_PER_INFER))
-            print('UFF_FILE_NAME = \'{}\''.format(UFF_FILE_NAME))
+            print('ONNX_FILE_NAME = \'{}\''.format('tensorflow/' + ONNX_FILE_NAME))
             print('INPUT_NODE_NAME = \'{}\''.format(INPUT_NODE_NAME))
-            print('INPUT_NODE_DIMS = (1, 1, {})'.format(input_len))
+            print('INPUT_PORT_NAME = \':0\'')
+            print('INPUT_LEN = {}'.format(input_len))
+            print('CPLX_SAMPLES_PER_INFER = {}'.format(CPLX_SAMPLES_PER_INFER))
         else:
             print('Failed Test')
 
