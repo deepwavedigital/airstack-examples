@@ -64,9 +64,9 @@ definitions in the python scripts.
 ## Step 1: Train Neural Network
 This toolbox provides examples for both TensorFlow and PyTorch. The training process
 should be run on a computer with TensorFlow and/or PyTorch installed. Since there is no
-training involved, any computer with TensorFlow installed will work, i.e., no GPU required.
-Note that the AIR-T does not come preinstalled with TensorFlow or PyTorch, however users
-may be able to install it on the platform.
+training involved, any computer will work, i.e., no GPU required. Note that the AIR-T does
+not come pre-installed with TensorFlow or PyTorch, however users may be able to install it
+on the platform.
 
 ### Install TensorFlow and PyTorch
 To build the neural networks using PyTorch or TensorFlow, a .yml file is provided to create the
@@ -294,7 +294,7 @@ installed in the
 
 
 ## Summary
-This toolobox should serve as an example for performing neural network inference on the AIR-T
+This toolbox should serve as an example for performing neural network inference on the AIR-T
 using PyTorch and TensorFlow. We have broken down the process into three simple steps. Users
 are encouraged to modify the neural networks to their specific application.
 

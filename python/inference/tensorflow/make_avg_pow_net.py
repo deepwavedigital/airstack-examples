@@ -80,11 +80,11 @@ def passed_test(buff, tf_result):
 def main():
     # Define input length of neural network. Should be 2 x number of complex samples
     input_len = 2 * CPLX_SAMPLES_PER_INFER
-    
+
     # Create test data in range of (-1, 1) for forward propagation test
     batch_size = 128  # Batch size to use for testing and validation here
     buff = np.random.randn(batch_size, input_len).astype(np.float32)
-    
+
     # Create TensorFlow Computational Graph
     with tf.Graph().as_default() as graph:
         input_data = tf.placeholder(tf.float32, shape=(None, input_len),
