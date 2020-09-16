@@ -73,7 +73,7 @@ def main():
     while ctr < NUM_BATCHES:
         try:
             # Receive samples from the AIR-T buffer
-            sr = sdr.readStream(rx_stream, [sample_buffer.host], CPLX_SAMPLES_PER_INFER)
+            sr = sdr.readStream(rx_stream, [sample_buffer.host], buff_len)
             if sr.ret == SOAPY_SDR_OVERFLOW:  # Data was dropped, i.e., overflow
                 print('O', end='', flush=True)
                 continue
