@@ -4,11 +4,18 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 """
-Transmits a tone out of the AIR-T. The script will create a tone segment that is
-infinity repeatable without a phase discontinuity and with 8 samples per period.
+Transmits a tone out of the AIR-T. The script will create a tone segment that
+is infinitely repeatable without a phase discontinuity and with 8 samples per
+period.
+
 The TX LO of the AIR-T is set such that the baseband frequency of the generated
 tone plus the LO frequency will transmit at the desired RF.
+
+Compatibility: This example is compatible with AirStack 0.3 and later. Earlier
+               versions of AirStack firmware do not have support for
+               transmitting using the SoapySDR API.
 """
+
 import sys
 import numpy as np
 import argparse
