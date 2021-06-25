@@ -12,7 +12,8 @@ buffer and has only one output node that calculates the average of the instantan
 power across each batch for the input buffer.
 
 The toolbox demonstrates how to create a simple neural network for
-[Tensorflow](https://www.tensorflow.org/) and [PyTorch](https://pytorch.org/) on a host computer.
+[Tensorflow](https://www.tensorflow.org/), [PyTorch](https://pytorch.org/), and
+[MATLAB](https://www.mathworks.com/products/matlab.html) on a host computer.
 Installation of these packages for training is made easy by the inclusion .yml file to create an
 [Anaconda](https://www.anaconda.com/products/individual) environment. For the inference execution,
 all python packages and dependencies are pre-installed on AIR-Ts running AirStack 0.3.0+.
@@ -155,9 +156,45 @@ INPUT_LEN = 4096
 CPLX_SAMPLES_PER_INFER = 2048
 ```
 
-&nbsp;
+### Running in MATLAB
+The MATLAB script that generates this neural net leverages the Deep Learning Toolbox. The
+neural net accepts a vector of 4096 samples which are fed to both inputs of a multiplier
+layer (performing a square operation), followed by a fully connected layer. The fully
+connected layer has all weights set to the normalization factor and all biases set to
+zero. The fully connected layer calculates the sum of all the squared elements multiplied
+by the normalization factor. It outputs the scalar result, which is the average power,
+i.e., `sum(norm_factor*(I.^2 + Q.^2))`.
 
+The MATLAB Deep Learning Toolbox requires that a neural net be "trained" before setting
+weights and biases. This is not required in the other frameworks which makes the MATLAB
+example here a little more complicated.  Once training is complete and the weights and
+biases set, the output of the neural net is found to be equal to the result of an average
+power calculation. The neural network is then saved an ONNX file. Once the MATLAB neural
+network is exported as an ONNX file, this file should be moved to the AIR-T to a suitable
+directory.
 
+Note: To export the trained MATLAB model to an ONNX file, you will need to install the
+free MATLAB add-on [Deep Learning Toolbox Converter for ONNX Model Format](
+https://www.mathworks.com/matlabcentral/fileexchange/67296-deep-learning-toolbox-converter-for-onnx-model-format)
+which is not included in the Deep Learning Toolbox. 
+
+#### Known issues with MATLAB
+Some users have reported a bug with the Deep Learning Toolbox Converter for ONNX Model
+Format add-on installation.  In order to function properly, the ONNX Converter requires
+two files to be installed:  the `onnxmex` file and an `onnxpb.dll` file.  Both will need
+to be located in the following folder for a Windows system:
+
+```
+C:\ProgramData\MATLAB\SupportPackages\R<version>\toolbox\nnet\supportpackages\onnx\+nnet\+internal\+cnn\+onnx
+```
+where `R<version>` is the MATLAB version, e.g., R2021a. The installation reportedly
+installs the `onnxpb.dll` file in a separate folder in:
+```
+C:\ProgramData\MATLAB\SupportPackages\R<version>\bin\win64\
+```
+In the event saving an ONNX file fails, try manually copy the `onnxpb.dll` to the required
+folder as described above.  The issue and the fix for this was reported
+[here](https://www.mathworks.com/matlabcentral/fileexchange/67296-deep-learning-toolbox-converter-for-onnx-model-format).
 
 
 ## Step 2: Optimize Neural Network
@@ -242,9 +279,32 @@ Result:
   Processing Time   : 35.670 msec
   Throughput        : 940.692 MSPS
   Data Rate         : 60.204 Gbit / sec
-```  
+```
 
-
+#### MATLAB Benchmark
+```
+$ python plan_bench.py
+[TensorRT] VERBOSE: Deserialize required 1544750 microseconds.
+TensorRT Inference Settings:
+  Batch Size           : 128
+  Explicit Batch       : True
+  Input Layer
+    Name               : input_buffer
+    Shape              : (128, 4096)
+    dtype              : float32
+  Output Layer
+    Name               : const_multiplier_Add
+    Shape              : (128, 1)
+    dtype              : float32
+  Receiver Output Size : 524,288 samples
+  TensorRT Input Size  : 524,288 samples
+  TensorRT Output Size : 128 samples
+Result:
+  Samples Processed : 33,554,432
+  Processing Time   : 175.177 msec
+  Throughput        : 191.546 MSPS
+  Data Rate         : 12.259 Gbit / sec
+```
 &nbsp;
 
 ## Step 3: Deploy Application on AIR-T
@@ -291,13 +351,6 @@ for AirStack 0.4.0+. For the simplicity of interacting with the AirStack drivers
 we recommend using the Python Packaging instead of Docker. The Python package should be
 installed in the
 [AirStack Anaconda environment](http://docs.deepwavedigital.com/Tutorials/6_conda.html).
-
-
-## Summary
-This toolbox should serve as an example for performing neural network inference on the AIR-T
-using PyTorch and TensorFlow. We have broken down the process into three simple steps. Users
-are encouraged to modify the neural networks to their specific application.
-
 
 &nbsp;
 ---
