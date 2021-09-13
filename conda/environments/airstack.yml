@@ -1,0 +1,17 @@
+name: airstack
+channels:
+  - conda-forge
+  - nvidia
+  - defaults
+  - file://opt/deepwave/conda-channels/airstack-conda
+
+dependencies:
+  - python=3.6
+  - scipy
+  - numpy
+  - matplotlib
+  - pip
+  - soapysdr-module-airt
+  - airstack-tensorrt
+  - gnuradio
+  - gr-wavelearner

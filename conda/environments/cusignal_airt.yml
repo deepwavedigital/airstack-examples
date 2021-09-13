@@ -1,0 +1,25 @@
+name: cusignal
+channels:
+  - conda-forge
+  - nvidia
+  - defaults
+  - numba
+  - file://opt/deepwave/conda-channels/airstack-conda
+
+dependencies:
+  - python=3.6
+  - scipy>=1.4.0,<1.5.0
+  - numpy
+  - matplotlib
+  - numba>=0.49
+  - pytest
+  - pytest-benchmark
+  - sphinx
+  - sphinx_rtd_theme
+  - numpydoc
+  - ipython
+  - pip
+  - soapysdr-module-airt
+  - airstack-tensorrt
+  - pip:
+    - cupy>=7.2.0
