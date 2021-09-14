@@ -15,3 +15,6 @@ dependencies:
   - airstack-tensorrt
   - gnuradio
   - gr-wavelearner
+
+  - pip:
+    - pycuda-2020.1-cp36-cp36m-linux_aarch64.whl
