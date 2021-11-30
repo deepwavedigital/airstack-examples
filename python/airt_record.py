@@ -54,7 +54,7 @@ while file_ctr < nfiles:
 
     # Make sure that the proper number of samples was read
     rc = sr.ret
-    assert rc == N, 'Error {}: {}'.format(rc.ret, errToStr(rc.ret))
+    assert rc == N, 'Error {}: {}'.format(rc, errToStr(rc))
 
     # Write buffer to multiple files. Reshaping the rx_buffer allows for iteration
     for file_data in rx_buff.reshape(files_per_buffer, real_samples_per_file):
