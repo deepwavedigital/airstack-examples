@@ -22,5 +22,17 @@ be used within a python 3.9 environment:
     conda activate airstack-py39
     ```
 
+### Customize Environment
+You may add packages to the .yml file and then update the existing environment using the
+following command:
+   ```
+   conda activate airstack-py39
+   conda env update -f airstack-py39.yml --prune
+   ```
+
+Many .whl and installation file for common ML tools may be found in the 
+[Jetson Zoo](https://elinux.org/Jetson_Zoo). Make sure that the tools you download are
+built for the version of JetPack installed on your AIR-T. 
+
 ## Notes
 1. The CUDA version will still be pinned to 10.2.
