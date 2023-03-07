@@ -10,6 +10,7 @@ be used within a python 3.9 environment:
 * pyTools
 * TensorRT
 * ONNX Runtime
+* CuPy
 
 ## Installation
 1. Copy all files from this directory to your AIR-T
