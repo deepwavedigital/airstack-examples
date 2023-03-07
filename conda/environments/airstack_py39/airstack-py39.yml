@@ -1,0 +1,21 @@
+name: airstack-py39
+channels:
+  - conda-forge
+  - nvidia
+  - defaults
+  - file://opt/deepwave/conda-channels/airstack-conda
+
+dependencies:
+  - python=3.9
+  - scipy
+  - numpy
+  - matplotlib
+  - pip
+  - soapysdr-module-airt
+  - gnuradio
+  - gr-wavelearner
+
+  - pip:
+    - tensorrt-8.0.1.6-cp39-none-linux_aarch64.whl
+    - pytools-2022.1.12-py2.py3-none-any.whl
+    - pycuda-2020.1-cp39-cp39-linux_aarch64.whl
