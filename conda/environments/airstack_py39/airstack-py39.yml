@@ -16,6 +16,7 @@ dependencies:
   - gr-wavelearner
 
   - pip:
+    - onnxruntime_gpu-1.10.0-cp39-cp39-linux_aarch64.whl
     - tensorrt-8.0.1.6-cp39-none-linux_aarch64.whl
     - pytools-2022.1.12-py2.py3-none-any.whl
     - pycuda-2020.1-cp39-cp39-linux_aarch64.whl

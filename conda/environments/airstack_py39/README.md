@@ -9,6 +9,7 @@ be used within a python 3.9 environment:
 * pyCUDA
 * pyTools
 * TensorRT
+* ONNX Runtime
 
 ## Installation
 1. Copy all files from this directory to your AIR-T
