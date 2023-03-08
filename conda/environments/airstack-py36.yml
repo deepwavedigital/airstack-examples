@@ -1,0 +1,23 @@
+name: airstack-py36
+channels:
+  - conda-forge
+  - nvidia
+  - defaults
+  - file://opt/deepwave/conda-channels/airstack-conda
+
+dependencies:
+  - python=3.6
+  - scipy
+  - numpy
+  - matplotlib
+  - pip
+  - soapysdr-module-airt
+  - airstack-tensorrt
+  - gnuradio
+  - gr-wavelearner
+
+  - pip:
+    - https://archive.deepwavedigital.com/onnxruntime-gpu/onnxruntime_gpu-1.10.0-cp36-cp36m-linux_aarch64.whl
+    - https://archive.deepwavedigital.com/pycuda/pycuda-2020.1-cp36-cp36m-linux_aarch64.whl
+    - https://archive.deepwavedigital.com/torch/torch-1.10.0-cp36-cp36m-linux_aarch64.whl
+    - cupy>=7.2.0

@@ -17,4 +17,5 @@ dependencies:
   - gr-wavelearner
 
   - pip:
-    - pycuda-2020.1-cp36-cp36m-linux_aarch64.whl
+    - https://archive.deepwavedigital.com/onnxruntime-gpu/onnxruntime_gpu-1.10.0-cp36-cp36m-linux_aarch64.whl
+    - https://archive.deepwavedigital.com/pycuda/pycuda-2020.1-cp36-cp36m-linux_aarch64.whl
