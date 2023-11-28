@@ -42,19 +42,25 @@ def make_tone(n, fcen, fs, phi=0.285):
     return sig_int16
 
 
-def transmit_tone(freq, chan=0, fs=31.25, gain=-20, buff_len=16384):
+def transmit_tone(freq, chan=0, fs=31.25e6, gain=-20, buff_len=16384):
     """ Transmit a tone out of the AIR-T """
-    # Generate tone buffer that can be repeated without phase discontunity
-    bb_freq = fs / 8  # baseband frequency of tone
-    tx_buff = make_tone(buff_len, bb_freq, fs)
-    lo_freq = freq - bb_freq  # Calc LO freq to put tone at tone_rf
 
     # Setup Radio
     sdr = SoapySDR.Device()  # Create AIR-T instance
     sdr.setSampleRate(SOAPY_SDR_TX, chan, fs)  # Set sample rate
-    sdr.setFrequency(SOAPY_SDR_TX, chan, lo_freq)  # Tune the LO
     sdr.setGain(SOAPY_SDR_TX, chan, gain)
 
+    fs_actual = sdr.getSampleRate(SOAPY_SDR_TX, chan)
+    print(f"Requested Fs: {fs}, Actual Fs: {fs_actual}")
+
+    # Generate tone buffer that can be repeated without phase discontunity
+    bb_freq = fs_actual / 8  # baseband frequency of tone
+    tx_buff = make_tone(buff_len, bb_freq, fs_actual)
+    lo_freq = freq - bb_freq  # Calc LO freq to put tone at tone_rf
+
+    # Tune the LO before radio setup so that calibrations run for the correct
+    # transmit frequency of interest
+    sdr.setFrequency(SOAPY_SDR_TX, chan, lo_freq)
     tx_stream = sdr.setupStream(SOAPY_SDR_TX, SOAPY_SDR_CS16, [chan])
     sdr.activateStream(tx_stream)  # this turns the radio on
 
