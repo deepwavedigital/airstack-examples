@@ -9,6 +9,7 @@ dependencies:
   - python=3.6
   - scipy
   - numpy
+  - mako==1.2
   - matplotlib
   - pip
   - soapysdr-module-airt
