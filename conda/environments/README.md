@@ -31,14 +31,6 @@ As of AirStack 1.0.0, gr-wavelearner no longer supports Python 3.6 and 3.7 due t
 that these Python versions are EOL. As a result, users who require GPU accelerated computing
 via GNU Radio should use the `airstack-py39.yml` conda environment as a starting point.
 
-### Deprecation Warning
-The Deepwave team is constantly evaluating support for older Python versions as such
-software maintenance is extremely taxing on our small team. As a result, all conda
-environments that use Python versions that have been marked as EOL (status of various
-versions can be found [here](https://devguide.python.org/versions/)) should be considered
-deprecated and support can be dropped at any time. Please port your code to a newer version
-of Python ASAP.
-
 ## Provided Conda Environments
 We provide three baseline AIR-T conda environment files to help users get started:
 
