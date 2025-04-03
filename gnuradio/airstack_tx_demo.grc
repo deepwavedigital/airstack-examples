@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: AirStack Demo
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -36,7 +37,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: 125e6
+    value: int(125e6)
   states:
     bus_sink: false
     bus_source: false
@@ -54,9 +55,9 @@ blocks:
     orient: QtCore.Qt.Horizontal
     rangeType: float
     start: -samp_rate/2
-    step: '1'
+    step: '0.1'
     stop: samp_rate/2
-    value: '0'
+    value: '1'
     widget: counter_slider
   states:
     bus_sink: false
@@ -98,17 +99,18 @@ blocks:
     label3: ''
     label4: ''
     labels: '[str(base_adc_rate), str(base_adc_rate/2), str(base_adc_rate/4), str(base_adc_rate/8),
-      str(base_adc_rate/16)]'
+      str(base_adc_rate/16), str(base_adc_rate/32)]'
     num_opts: '0'
     option0: base_adc_rate / 1
     option1: base_adc_rate / 2
     option2: base_adc_rate / 4
     option3: '3'
     option4: '4'
-    options: '[base_adc_rate, base_adc_rate/2, base_adc_rate/4, base_adc_rate/8, base_adc_rate/16]'
+    options: '[base_adc_rate, base_adc_rate/2, base_adc_rate/4, base_adc_rate/8, base_adc_rate/16,
+      base_adc_rate/32]'
     orient: Qt.QVBoxLayout
     type: real
-    value: base_adc_rate/8
+    value: base_adc_rate/32
     widget: combo_box
   states:
     bus_sink: false
@@ -122,7 +124,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: '0.25'
+    amp: '0'
     comment: ''
     freq: bb_freq_mhz*1e6
     maxoutbuf: '0'
@@ -146,12 +148,14 @@ blocks:
     alias: ''
     center_freq: lo_freq_mhz*1e6
     comment: ''
-    dev_args: ''
-    gain0: '0'
+    dev_args: f"master_clock_rate={base_adc_rate:.3f}"
+    gain0: '-10'
     gain1: '0'
+    min_buff_size: '4096'
     nchan: '1'
     samp_rate0: samp_rate
     samp_rate1: samp_rate
+    stream_args: ''
     type: fc32
   states:
     bus_sink: false
