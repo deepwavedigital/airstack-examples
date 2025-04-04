@@ -1,4 +1,4 @@
-name: airstack
+name: airstack-py310
 channels:
   - conda-forge
   - nvidia
@@ -6,16 +6,19 @@ channels:
   - file://opt/deepwave/conda-channels/airstack-conda
 
 dependencies:
-  - python=3.6
+  - python=3.10
   - scipy
   - numpy
-  - mako==1.2
   - matplotlib
   - pip
+  - cupy
+  - numba
+  - pycuda
+  - conda-forge::soapysdr[version="==0.8.1",build="*_4"]
   - soapysdr-module-airt
-  - airstack-tensorrt
   - gnuradio
+  - onnxruntime
 
   - pip:
-    - https://archive.deepwavedigital.com/onnxruntime-gpu/onnxruntime_gpu-1.10.0-cp36-cp36m-linux_aarch64.whl
-    - https://archive.deepwavedigital.com/pycuda/pycuda-2020.1-cp36-cp36m-linux_aarch64.whl
+     - https://developer.download.nvidia.com/compute/redist/jp/v60/tensorflow/tensorflow-2.16.1+nv24.06-cp310-cp310-linux_aarch64.whl
+     - https://pypi.jetson-ai-lab.dev/jp6/cu122/+f/58f/a1599f99fc2fb/torch-2.3.0-cp310-cp310-linux_aarch64.whl

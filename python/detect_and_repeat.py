@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright 2020, Deepwave Digital, Inc.
+# Copyright 2025, Deepwave Digital, Inc.
 # SPDX-License-Identifier: BSD-3-Clause
 
 import sys
@@ -9,9 +9,9 @@ import concurrent.futures
 import SoapySDR
 from SoapySDR import SOAPY_SDR_TX, SOAPY_SDR_RX
 from SoapySDR import SOAPY_SDR_CF32, SOAPY_SDR_OVERFLOW
-import cusignal
-from cusignal.filter_design import fir_filter_design
 import cupy as cp
+import cupyx.scipy.signal as signal
+from numba import cuda
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -39,15 +39,17 @@ def parse_command_line_arguments():
 
 class PowerDetector:
     """ Real-time power detector class for finding signals with AIR-T"""
+
     def __init__(self, buff, thresh_db, ntaps=65, cutoff=0.02,
                  samp_above_thresh=20):
-        self._thresh_offset = 10 ** (thresh_db / 10)  # Convert thresh to linear
+        # Convert thresh to linear
+        self._thresh_offset = 10 ** (thresh_db / 10)
         self._thresh = float('inf')
         self._samp_above_thresh = samp_above_thresh
 
         # Calculate filter coefficients
-        filt_coef = fir_filter_design.firwin(ntaps, cutoff,
-                                             window=('kaiser', 0.5))
+        filt_coef = signal.firwin(ntaps, cutoff,
+                                  window=('kaiser', 0.5))
         group_delay = int(ntaps / 2)
         self._buff_len = len(buff)
         # cusignal filter returns array w/ padding so define index for signal ROI
@@ -86,8 +88,8 @@ class PowerDetector:
         # Compute the instantaneous power for the current buffer
         x_envelope = cp.abs(x_in)
         # Filter and decimate the envelope to a lower data rate
-        self._envelope[:] = cusignal.upfirdn(self._win,
-                                             x_envelope)[self._filter_roi]
+        self._envelope[:] = signal.upfirdn(self._win,
+                                           x_envelope)[self._filter_roi]
         # Update threshold
         # Add summation of current envelope to the threshold fifo array
         self._bkg_sum_arr[self._fifo_index] = cp.sum(self._envelope)
@@ -103,20 +105,20 @@ class PowerDetector:
         n_detections = cp.sum(envelope_det_idx)
         # Make sure at least samp_above_thresh are higher than the threshold
         if n_detections > self._samp_above_thresh:
-            # Copy to cupy array as workaround to issue cuSignal #178
-            x_out = cp.array(x_in)
-            x_out[~envelope_det_idx] = 0  # Zero out samples below threshold
+            x_in[~envelope_det_idx] = 0  # Zero out samples below threshold
         else:
-            x_out = None
-        return x_out
+            x_in = None
+        return x_in
 
 
 def tx_task_fn(sdr, tx_stream, tx_sig, tx_buff_len):
     """ Transmit task that can be made a background process """
     rc = sdr.writeStream(tx_stream, [tx_sig], tx_buff_len)
     if rc.ret != tx_buff_len:
-        raise IOError('Tx Error {}:{}'.format(rc.ret, SoapySDR.errToStr(rc.ret)))
-    print('*', end='', flush=True)  # print an asterisk when a signal is repeated
+        raise IOError('Tx Error {}:{}'.format(
+            rc.ret, SoapySDR.errToStr(rc.ret)))
+    # print an asterisk when a signal is repeated
+    print('*', end='', flush=True)
 
 
 def main():
@@ -137,7 +139,7 @@ def main():
     sdr.setFrequency(SOAPY_SDR_TX, pars.channel, pars.freq)
 
     # Create SDR shared memory buffer, detector
-    buff = cusignal.get_shared_mem(pars.buff_len, dtype=cp.complex64)
+    buff = cuda.mapped_array(pars.buff_len, dtype=cp.complex64)
     detr = PowerDetector(buff, pars.threshold)
 
     # Turn on the transmitter
