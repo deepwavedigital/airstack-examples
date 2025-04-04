@@ -124,7 +124,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: '0'
+    amp: '0.2'
     comment: ''
     freq: bb_freq_mhz*1e6
     maxoutbuf: '0'
