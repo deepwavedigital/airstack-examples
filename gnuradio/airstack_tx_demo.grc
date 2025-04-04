@@ -23,7 +23,6 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: AirStack Demo
-    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -55,9 +54,9 @@ blocks:
     orient: QtCore.Qt.Horizontal
     rangeType: float
     start: -samp_rate/2
-    step: '0.1'
+    step: '1'
     stop: samp_rate/2
-    value: '1'
+    value: '0'
     widget: counter_slider
   states:
     bus_sink: false
@@ -110,7 +109,7 @@ blocks:
       base_adc_rate/32]'
     orient: Qt.QVBoxLayout
     type: real
-    value: base_adc_rate/32
+    value: base_adc_rate/8
     widget: combo_box
   states:
     bus_sink: false
@@ -124,7 +123,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: '0.2'
+    amp: '0.25'
     comment: ''
     freq: bb_freq_mhz*1e6
     maxoutbuf: '0'
@@ -149,7 +148,7 @@ blocks:
     center_freq: lo_freq_mhz*1e6
     comment: ''
     dev_args: f"master_clock_rate={base_adc_rate:.3f}"
-    gain0: '-10'
+    gain0: '0'
     gain1: '0'
     min_buff_size: '4096'
     nchan: '1'

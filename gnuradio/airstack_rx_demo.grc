@@ -42,7 +42,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [480, 20.0]
+    coordinate: [472, 20]
     rotation: 0
     state: enabled
 - name: freq_mhz
@@ -55,15 +55,15 @@ blocks:
     orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '300'
-    step: '0.5'
+    step: '1'
     stop: '6000'
-    value: '700'
+    value: '2400'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 20.0]
+    coordinate: [256, 20]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -89,7 +89,7 @@ blocks:
       base_adc_rate/32]'
     orient: Qt.QVBoxLayout
     type: real
-    value: base_adc_rate/16
+    value: base_adc_rate/8
     widget: combo_box
   states:
     bus_sink: false
@@ -114,7 +114,7 @@ blocks:
     alpha8: '1.0'
     alpha9: '1.0'
     autoscale: 'False'
-    average: '0.1'
+    average: '1.0'
     axislabels: 'True'
     bw: samp_rate
     color1: '"blue"'
@@ -130,7 +130,7 @@ blocks:
     comment: ''
     ctrlpanel: 'False'
     fc: freq_mhz*1e6
-    fftsize: '16384'
+    fftsize: '1024'
     freqhalf: 'True'
     grid: 'True'
     gui_hint: ''
@@ -170,7 +170,7 @@ blocks:
     width8: '1'
     width9: '1'
     wintype: window.WIN_BLACKMAN_hARRIS
-    ymax: '-30'
+    ymax: '10'
     ymin: '-140'
   states:
     bus_sink: false
@@ -200,7 +200,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [88, 300.0]
+    coordinate: [96, 308.0]
     rotation: 0
     state: true
 
