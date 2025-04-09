@@ -17,10 +17,14 @@ from SoapySDR import Device, SOAPY_SDR_RX, SOAPY_SDR_CF32, SOAPY_SDR_OVERFLOW
 
 
 # Top-level inference settings.
-CPLX_SAMPLES_PER_INFER = 2048  # This should be half input_len from the neural network
-PLAN_FILE_NAME = 'pytorch/avg_pow_net.plan'  # Plan file created from uff2plan.py
-BATCH_SIZE = 128  # Must be less than or equal to max_batch_size from uff2plan.py
-NUM_BATCHES = 16  # Number of batches to run. Set to float('Inf') to run continuously
+# This should be half input_len from the neural network
+CPLX_SAMPLES_PER_INFER = 2048
+# Plan file created from uff2plan.py
+PLAN_FILE_NAME = 'pytorch/avg_pow_net.plan'
+BATCH_SIZE = 64  # Must be less than or equal to max_batch_size from uff2plan.py
+# Number of batches to run. Set to float('Inf') to run continuously
+NUM_BATCHES = 16
+
 
 # Top-level SDR settings.
 SAMPLE_RATE = 7.8125e6  # AIR-T sample rate
@@ -31,7 +35,8 @@ CHANNEL = 0  # AIR-T receiver channel
 def passed_test(buff_arr, result):
     """ Make sure numpy calculation matches TensorFlow calculation. Returns True if the
      numpy calculation matches the TensorFlow calculation"""
-    buff = buff_arr.reshape(BATCH_SIZE, -1)  # Reshape so first dimension is batch_size
+    buff = buff_arr.reshape(
+        BATCH_SIZE, -1)  # Reshape so first dimension is batch_size
     sig = buff[:, ::2] + 1j*buff[:, 1::2]  # Convert to complex valued array
     wlen = float(sig.shape[1])  # Normalization factor
     np_result = np.sum((sig.real**2) + (sig.imag**2), axis=1) / wlen

@@ -55,8 +55,9 @@ class TrtInferFromPlan:
             trt_engine = deserializer(f.read())
 
         # Perform data size/shape checks
-        assert batch_size <= trt_engine.max_batch_size, 'Invalid batch size'
-        if batch_size != trt_engine.max_batch_size:
+        _min_shape, _, max_shape = trt_engine.get_profile_shape(0, 0)
+        assert batch_size <= max_shape[0], 'Invalid batch size'
+        if batch_size != max_shape[0]:
             warnings.warn('Unoptimized batch size detected', RuntimeWarning)
         self._batch_size = batch_size
 
@@ -86,7 +87,8 @@ class TrtInferFromPlan:
         trt_in_size = trt.volume(input_shape)
         input_dtype = trt.nptype(trt_engine.get_binding_dtype(input_layer))
         assert trt_in_size == sdr_out_size, 'Plan expected {} but got {} ' \
-                                            'samples'.format(trt_in_size, sdr_out_size)
+                                            'samples'.format(
+                                                trt_in_size, sdr_out_size)
         self.input_buff = input_buffer
 
         # For the output layer, we have a specified size and type from the PLAN
@@ -102,7 +104,8 @@ class TrtInferFromPlan:
         # the binding shape now so that the batch size is accounted for in the
         # execution context.
         if self._explicit_batch:
-            self._infer_context.set_binding_shape(input_binding_index, input_shape)
+            self._infer_context.set_binding_shape(
+                input_binding_index, input_shape)
 
         if verbose:
             print('TensorRT Inference Settings:')
