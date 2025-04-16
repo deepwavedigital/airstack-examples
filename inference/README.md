@@ -1,7 +1,7 @@
 # AIR-T Deep Learning Inference Examples
 
 <p align="center">
-<img src="https://deepwavedigital.com/media/images/dwd2_crop_transparent.png" Width="50%" />
+<img src="https://deepwave.ai/media/images/dwd2_crop_transparent.png" Width="50%" />
 </p>
 
 &nbsp;
@@ -13,23 +13,19 @@ power across each batch for the input buffer.
 
 The toolbox demonstrates how to create a simple neural network for
 [Tensorflow](https://www.tensorflow.org/), [PyTorch](https://pytorch.org/), and
-[MATLAB](https://www.mathworks.com/products/matlab.html) on a host computer.
-Installation of these packages for training is made easy by the inclusion .yml file to create an
-[Anaconda](https://www.anaconda.com/products/individual) environment. For the inference execution,
-all python packages and dependencies are pre-installed on AIR-Ts running AirStack 0.3.0+.
+[MATLAB](https://www.mathworks.com/products/matlab.html).
+Installation of these packages for training is made easy by the included airstack-infer.yml file to create an
+[Anaconda](https://www.anaconda.com/products/individual) environment. 
 
 
 ## Author
-This software is written by [**Deepwave Digital, Inc.**]([www.deepwavedigital.com)
+This software is written by [**Deepwave Digital, Inc.**]([www.deepwave.ai)
+General company contact: [https://deepwave.ai/inquiry](https://deepwave.ai/inquiry/)
 
-General company contact: [https://deepwavedigital.com/inquiry](https://deepwavedigital.com/inquiry/)
-
-&nbsp;
 
 ## Training to Deployment Workflow Overview
 The figure below outlines the workflow for training, optimizing, and deploying a neural
-network on the AIR-T. All python packages and dependencies are included on the AirStack
-0.3.0+, which is the API for the [AIR-T](https://deepwavedigital.com/hardware-products/sdr/).
+network on the AIR-T. 
 
 By default, the toolbox will use PyTorch. This can be changed by updating the file folder
 definitions in the python scripts.
@@ -57,34 +53,29 @@ definitions in the python scripts.
 &nbsp;
 
 <p align="center">
-<img src="https://deepwavedigital.com/wp-content/uploads/2019/06/Flow-diagram-1500x702.jpg" Width="75%" />
+<img src="https://deepwave.ai/wp-content/uploads/2019/06/Flow-diagram-1500x702.jpg" Width="75%" />
 </p>
 
 &nbsp;
 
 ## Step 1: Train Neural Network
-This toolbox provides examples for both TensorFlow and PyTorch. The training process
-should be run on a computer with TensorFlow and/or PyTorch installed. Since there is no
-training involved, any computer will work, i.e., no GPU required. Note that the AIR-T does
-not come pre-installed with TensorFlow or PyTorch, however users may be able to install it
-on the platform.
+This toolbox provides examples for both TensorFlow and PyTorch. For these examples, the training process
+may be run on an AIR-T in the inference conda environment. Since there is no
+training involved, any computer will work, i.e., no GPU required. The matlab example should be run from a host computer with matlab installed.
 
 ### Install TensorFlow and PyTorch
 To build the neural networks using PyTorch or TensorFlow, a .yml file is provided to create the
-Anaconda environment. This is for creating the training environment on the host computer, not the
-AIR-T. To create the Anaconda environment, open a terminal and type:
+Anaconda environment. To create the Anaconda environment, open a terminal and type:
 
 ```
-conda env create -f infer_test_env.yml
+conda env create -f airstack-infer.yml
 ```
 
 and activate the environment:
 
 ```
-conda activate infer_test_env
+conda activate airstack-infer
 ```
-
-This toolbox has been tested on Linux and Mac OSX, but is expected to run on Window as well.
 
 ### Create Neural Network
 Run the `make_avg_pow_net.py` script and it will create an ONNX file that contains a 
@@ -310,12 +301,11 @@ Result:
 ## Step 3: Deploy Application on AIR-T
 
 **Note:** All drivers and software packages required to run inference are already installed
-in the native Python environment on the AIR-T. Users should not need to add additional
-packages to run this toolbox. The provided .yml file to create the conda environment for
-training is not needed for inference on the AIR-T and should not be installed. 
+in the native Python environment on the AIR-T except for pycuda.The provided airstack_infer.yml file to create the conda environment for
+training and optimization should be used here as well unless the user prefers to install pycuda themselves.
 
 After creating a PLAN file using `onnx2plan.py`, users may execute the the neural network
-on the AIR-T by running the `run_airt_inference.py` script in the native Python environment.
+on the AIR-T by running the `run_airt_inference.py` script in the conda Python environment.
 This script shows, in detail, how to setup pyCUDA memory buffers, feed RF samples from the
 AIR-T's receiver to the memory buffers, and execute the neural network. After running this
 script, users will see the following output.
