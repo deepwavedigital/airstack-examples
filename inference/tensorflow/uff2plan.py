@@ -25,7 +25,8 @@ LOGGER = trt.Logger(trt.Logger.VERBOSE)
 def main():
     # File and path checking
     plan_file = UFF_FILE_NAME.replace('.uff', '.plan')
-    assert os.path.isfile(UFF_FILE_NAME), 'UFF file not found: {}'.format(UFF_FILE_NAME)
+    assert os.path.isfile(
+        UFF_FILE_NAME), 'UFF file not found: {}'.format(UFF_FILE_NAME)
     if os.path.isfile(plan_file):
         os.remove(plan_file)
 
@@ -40,8 +41,10 @@ def main():
 
     # Define DNN parameters for inference
     builder.max_batch_size = MAX_BATCH_SIZE
-    builder.max_workspace_size = MAX_WORKSPACE_SIZE
-    builder.fp16_mode = FP16_MODE
+    config = builder.create_builder_config()
+    config.max_workspace_size = MAX_WORKSPACE_SIZE
+    if FP16_MODE:
+        config.set_flag(trt.BuilderFlag.FP16)
 
     # Optimize the network
     engine = builder.build_cuda_engine(network)
@@ -58,7 +61,8 @@ def main():
         print('PLAN File Name : {}'.format(plan_file))
         print('PLAN File Size : {}\n'.format(os.path.getsize(plan_file)))
         print('Network Parameters inference on AIR-T:')
-        print('CPLX_SAMPLES_PER_INFER = {}'.format(int(INPUT_NODE_DIMS[2] / 2)))
+        print('CPLX_SAMPLES_PER_INFER = {}'.format(
+            int(INPUT_NODE_DIMS[2] / 2)))
         print('PLAN_FILE_NAME = \'{}\''.format(plan_file))
         print('BATCH_SIZE <= {}'.format(MAX_BATCH_SIZE))
     else:
