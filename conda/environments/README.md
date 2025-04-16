@@ -1,15 +1,16 @@
 # AirStack Conda Environment
 
-This directory contain examples of conda `.yml` files to create Python virtual
+This directory contains examples of conda `.yml` files to create Python virtual
 environments that will work on the AIR-T. AirStack is the operating system, firmware, and
 drivers for Deepwave's AIR-T and it is based on NVIDIA's JetPack.
 
-*Note*: TensorRT is not included in the provided conda file. If you intend to use TensorRT from within a conda environment you will likely have to build from source on the AIR-T to match the TensorRT version pre installed on the device. Deepwave recommends using TensorRT outside of conda or from within a docker container that uses the same version.
 
 ## Provided Conda Environments
-We provide a baseline AIR-T conda environment file to help users get started:
+We provide baseline AIR-T conda environment files to help users get started:
 
-* `airstack.yml` - basic airstack environment with radio drivers and inference packages
+* `airstack.yml` - basic airstack environment with radio drivers
+* `airstack_infer.yml` - basic airstack environment with radio drivers and inference packages
+
 
 ## Installation
 1. Copy the desired `.yml` file to your AIR-T
