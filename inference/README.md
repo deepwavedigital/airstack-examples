@@ -65,7 +65,7 @@ training involved, any computer will work, i.e., no GPU required. The matlab exa
 
 ### Install TensorFlow and PyTorch
 To build the neural networks using PyTorch or TensorFlow, a .yml file is provided to create the
-Anaconda environment. To create the Anaconda environment, open a terminal and type:
+Anaconda environment. If using pytorch create the Anaconda environment, open a terminal and type:
 
 ```
 conda env create -f airstack-infer.yml
@@ -76,6 +76,8 @@ and activate the environment:
 ```
 conda activate airstack-infer
 ```
+
+If using Tensorflow replace `airstack-infer.yml` with `airstack-infer-tf.yml`.
 
 ### Create Neural Network
 Run the `make_avg_pow_net.py` script and it will create an ONNX file that contains a 

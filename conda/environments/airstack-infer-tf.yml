@@ -5,7 +5,7 @@
 # for this environment to build.
 #
 
-name: airstack-infer
+name: airstack-infer-tf
 channels:
   - conda-forge
   - nvidia
@@ -22,10 +22,10 @@ dependencies:
   - pycuda
   - conda-forge::soapysdr[version="==0.8.1",build="*_4"]
   - soapysdr-module-airt
-  - cupy
 
   - pip:
      - onnx
      - onnxruntime
-     - https://pypi.jetson-ai-lab.dev/jp6/cu122/+f/58f/a1599f99fc2fb/torch-2.3.0-cp310-cp310-linux_aarch64.whl
+     - tf2onnx
+     - https://developer.download.nvidia.com/compute/redist/jp/v60/tensorflow/tensorflow-2.16.1+nv24.06-cp310-cp310-linux_aarch64.whl
      - /opt/conda-wheels/tensorrt-8.6.1-cp310-none-linux_aarch64.whl

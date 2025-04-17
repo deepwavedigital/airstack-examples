@@ -14,4 +14,3 @@ dependencies:
   - conda-forge::soapysdr[version="==0.8.1",build="*_4"]
   - soapysdr-module-airt
   - gnuradio
-  - cupy
