@@ -5,9 +5,9 @@ This repository provides example source code and conda environments to assist de
 
  Please select the appropriate branch to match your Airstack Version. You may find your current Airstack version using the command: ```SoapySDRUtil --find | grep -a driver_version```. 
 
-* [AirStack 1.0 or earlier is here](https://github.com/deepwavedigital/airstack-examples/branches/airstack-1.0)
+* [AirStack 1.0 or earlier is here](https://github.com/deepwavedigital/airstack-examples/tree/airstack-1.0)
 
-* [AirStack 2.0+ is here](https://github.com/deepwavedigital/airstack-examples/branches/airstack-2.0)
+* [AirStack 2.0+ is here](https://github.com/deepwavedigital/airstack-examples/tree/airstack-2.0)
 
 ## Author
 <p align="center">
