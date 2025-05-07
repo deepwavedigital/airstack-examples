@@ -19,7 +19,7 @@ dependencies:
   - matplotlib
   - pip
   - numba
-  - pycuda
+  - pycuda<2024
   - conda-forge::soapysdr[version="==0.8.1",build="*_4"]
   - soapysdr-module-airt
 
