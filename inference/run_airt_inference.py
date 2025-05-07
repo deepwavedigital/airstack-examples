@@ -21,7 +21,7 @@ from SoapySDR import Device, SOAPY_SDR_RX, SOAPY_SDR_CF32, SOAPY_SDR_OVERFLOW
 CPLX_SAMPLES_PER_INFER = 2048
 # Plan file created from uff2plan.py
 PLAN_FILE_NAME = 'pytorch/avg_pow_net.plan'
-BATCH_SIZE = 64  # Must be less than or equal to max_batch_size from uff2plan.py
+BATCH_SIZE = 128  # Must be less than or equal to max_batch_size from uff2plan.py
 # Number of batches to run. Set to float('Inf') to run continuously
 NUM_BATCHES = 16
 
@@ -57,7 +57,8 @@ def main():
     # define the GPU memory buffer as twice the size of the SDR buffer but np.float32
     # dtypes. We do this because the neural network input layer expects np.float32. The
     # SOAPY_SDR_CF32 can be copied directly to the np.float32 buffer.
-    buff_len = 2 * CPLX_SAMPLES_PER_INFER * BATCH_SIZE
+    samples_per_read = CPLX_SAMPLES_PER_INFER * BATCH_SIZE
+    buff_len = 2 * samples_per_read
     sample_buffer = trt_utils.MappedBuffer(buff_len, np.float32)
 
     # Set up the inference engine. Note that the output buffers are created for
@@ -78,7 +79,7 @@ def main():
     while ctr < NUM_BATCHES:
         try:
             # Receive samples from the AIR-T buffer
-            sr = sdr.readStream(rx_stream, [sample_buffer.host], buff_len)
+            sr = sdr.readStream(rx_stream, [sample_buffer.host], samples_per_read)
             if sr.ret == SOAPY_SDR_OVERFLOW:  # Data was dropped, i.e., overflow
                 print('O', end='', flush=True)
                 continue
