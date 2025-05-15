@@ -14,7 +14,7 @@ Users may modify the layers in the neural_network function for the network that 
 suited for that application. Note that any layer that is used must be supported by
 TensorRT so that it can be deployed on the AIR-T. See the AirStack API documentation
 for more information on supported layers:
-http://docs.deepwavedigital.com/AirStack/airstack.html
+https://docs.deepwave.ai/AirStack/Core/programming_guide/ai_inference/
 """
 
 import numpy as np

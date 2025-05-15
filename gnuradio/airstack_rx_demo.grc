@@ -1,6 +1,6 @@
 options:
   parameters:
-    author: Deepwave Digital
+    author: Deepwave
     catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''

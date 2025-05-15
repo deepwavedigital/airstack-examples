@@ -19,7 +19,7 @@ Installation of these packages for training is made easy by the included airstac
 
 
 ## Author
-This software is written by [**Deepwave Digital, Inc.**]([www.deepwave.ai)
+This software is written by [**Deepwave**]([www.deepwave.ai)
 General company contact: [https://deepwave.ai/inquiry](https://deepwave.ai/inquiry/)
 
 
@@ -342,7 +342,7 @@ deployment (Step 2 above). Users interested in deploying without optimization ma
 for AirStack 0.4.0+. For the simplicity of interacting with the AirStack drivers,
 we recommend using the Python Packaging instead of Docker. The Python package should be
 installed in the
-[AirStack Anaconda environment](http://docs.deepwavedigital.com/Tutorials/6_conda.html).
+[AirStack Anaconda environment](https://docs.deepwave.ai/Tutorials/conda/).
 
 &nbsp;
 ---
