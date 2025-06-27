@@ -1,8 +1,6 @@
 #
-# IMPORTANT NOTE: To use this yml file you must first download and extract the NVIDIA provided TensorRT 8.6.1 
-# release from here: https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/secure/8.6.1/tars/TensorRT-8.6.1.6.Ubuntu-20.04.aarch64-gnu.cuda-12.0.tar.gz. 
-# Once you have extracted the files you must place the "tensorrt-8.6.1-cp310-none-linux_aarch64.whl" found in the python folder in /opt/conda-wheels/ on your AIR-T 
-# for this environment to build.
+# IMPORTANT NOTE: This file does not include TensorRT because it is inteded to be installed with the deepwave provided conda_tensorrt_setup.sh script.
+# This script will handle the TensorRT install once the files are downloaded to the device. Please see the README for more information.
 #
 
 name: airstack-infer
@@ -19,7 +17,7 @@ dependencies:
   - matplotlib
   - pip
   - numba
-  - pycuda<2024
+  - pycuda
   - conda-forge::soapysdr[version="==0.8.1",build="*_4"]
   - soapysdr-module-airt
   - cupy
@@ -27,5 +25,4 @@ dependencies:
   - pip:
      - onnx
      - onnxruntime
-     - https://pypi.jetson-ai-lab.dev/jp6/cu122/+f/58f/a1599f99fc2fb/torch-2.3.0-cp310-cp310-linux_aarch64.whl
-     - /opt/conda-wheels/tensorrt-8.6.1-cp310-none-linux_aarch64.whl
+     - torch
