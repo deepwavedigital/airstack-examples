@@ -19,7 +19,7 @@ INPUT_PORT_NAME = ''  # ':0' for tensorflow, '' for pytorch
 INPUT_LEN = 4096  # Length of the input buffer (# of elements)
 MAX_BATCH_SIZE = 128  # Maximum batch size for which plan file will be optimized
 MAX_WORKSPACE_SIZE = 1073741824  # 1 GB for example
-FP16_MODE = True  # Use float16 if possible (all layers may not support this)
+FP16_MODE = False  # Use float16 if possible (all layers may not support this)
 LOGGER = trt.Logger(trt.Logger.VERBOSE)
 BENCHMARK = False  # Run plan file benchmarking at end
 
@@ -27,7 +27,8 @@ BENCHMARK = False  # Run plan file benchmarking at end
 def main():
     # File and path checking
     plan_file = ONNX_FILE_NAME.replace('.onnx', '.plan')
-    assert os.path.isfile(ONNX_FILE_NAME), 'ONNX file not found: {}'.format(ONNX_FILE_NAME)
+    assert os.path.isfile(
+        ONNX_FILE_NAME), 'ONNX file not found: {}'.format(ONNX_FILE_NAME)
     if os.path.isfile(plan_file):
         os.remove(plan_file)
 
@@ -41,9 +42,9 @@ def main():
     parser.parse_from_file(ONNX_FILE_NAME)
 
     # Define DNN parameters for inference
-    builder.max_batch_size = MAX_BATCH_SIZE
     config = builder.create_builder_config()
-    config.max_workspace_size = MAX_WORKSPACE_SIZE
+    config.set_memory_pool_limit(
+        trt.MemoryPoolType.WORKSPACE, MAX_WORKSPACE_SIZE)
     if FP16_MODE:
         config.set_flag(trt.BuilderFlag.FP16)
 
@@ -55,12 +56,13 @@ def main():
     profile.set_shape(input_name, (1, INPUT_LEN), optimized_input_dims,
                       optimized_input_dims)
     config.add_optimization_profile(profile)
-    engine = builder.build_engine(network, config)
+    engine = builder.build_serialized_network(
+        network, config)
 
     # Write output plan file
     assert engine is not None, 'Unable to create TensorRT engine. Check settings'
     with open(plan_file, 'wb') as file:
-        file.write(engine.serialize())
+        file.write(engine)
 
     # Print information to user
     if os.path.isfile(plan_file):
