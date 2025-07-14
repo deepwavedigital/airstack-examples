@@ -15,7 +15,7 @@ We provide baseline AIR-T conda environment files to help users get started:
 ## Important TensorRT Note
 AirStack 2.2+ currently includes TensorRT 10.3 from NVIDIA. At the time of this release the appropriate python binding file for this version is not publically available using the established conda channels or available for download directly. To build either of the inference environments you will first need to download the 10.3.0 TensorRT release from NVIDIA and extract the contents. 
 
-The 10.3 release can be found [here](https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.3.0/tars/TensorRT-10.3.0.26.l4t.aarch64-gnu.cuda-12.6.tar.gz). Extract the contents of the 'python' folder from this file on your radio to /opt/conda-wheels/ (you will need to create this directory). After extracting the contents Deepwave provides a bash script that can be run to create your conda environment and install and configure TensorRT.
+The 10.3 release can be found [here](https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/10.3.0/tars/TensorRT-10.3.0.26.l4t.aarch64-gnu.cuda-12.6.tar.gz). Extract the contents of the 'python' folder from this file on your radio to /opt/conda-wheels/ (you will need to create this directory). After extracting the contents Deepwave provides a bash script that can be run to create your conda environment as well as install and configure TensorRT.
 
 ## Installation without TensorRT
 1. Copy the desired `.yml` file to your AIR-T
@@ -30,7 +30,7 @@ The 10.3 release can be found [here](https://developer.nvidia.com/downloads/comp
 
 ## Installation with TensorRT
 1. Copy the desired `.yml` file to your AIR-T
-2. Create the conda environment and install tensorrt. This can take a few minutes 
+2. Create the conda environment and install tensorrt using the provided script. This can take a few minutes 
     ```
     conda_tensorrt_setup.sh <environment-name>
     ```

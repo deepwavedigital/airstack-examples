@@ -1,5 +1,5 @@
 #
-# IMPORTANT NOTE: This file does not include TensorRT because it is inteded to be installed with the deepwave provided conda_tensorrt_setup.sh script.
+# IMPORTANT NOTE: This file does not include TensorRT because it is intended to be installed with the deepwave provided conda_tensorrt_setup.sh script.
 # This script will handle the TensorRT install once the files are downloaded to the device. Please see the README for more information.
 #
 
