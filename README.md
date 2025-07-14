@@ -1,7 +1,7 @@
 # Airstack Examples
 This repository provides example source code and conda environments to assist developers in getting started with Deepwave Products. For a more detailed walk through on these examples and more see the [Tutorials documentation](https://docs.deepwave.ai/Tutorials/).
 
-**Note**: Please ensure you are using the appropriate branch or release to match your Airstack Version. This branch is for users running AirStack 2.0 or later. You may find your current Airstack version using the command: ```SoapySDRUtil --find | grep -a driver_version```. If your software version is 1.0 or earlier, you should use the Airstack 1.0 release found [here](https://github.com/deepwavedigital/airstack-examples/releases/tag/airstack-1.0).
+**Note**: Please ensure you are using the appropriate branch or release to match your Airstack Version. This branch is for users running AirStack 2.2 or later. You may find your current AirStack version using the command: ```SoapySDRUtil --find | grep -a driver_version```. If you are running a previous 2.X version you should upgrade to 2.2 by following the instructions [here](https://docs.deepwave.ai/AirStack/Core/installation/flash_procedure/). If your software version is 1.0 or earlier, you should use the Airstack 1.0 release found [here](https://github.com/deepwavedigital/airstack-examples/releases/tag/airstack-1.0).
 
 ## Author
 <p align="center">

@@ -65,10 +65,10 @@ training involved, any computer will work, i.e., no GPU required. The matlab exa
 
 ### Install TensorFlow and PyTorch
 To build the neural networks using PyTorch or TensorFlow, a .yml file is provided to create the
-Anaconda environment. If using pytorch create the Anaconda environment, open a terminal and type:
+Anaconda environment excluding TensorRT. A bash script is provided to handle the TensorRT install and setup. For more information on the TensorRT install please see the README file [here](./../conda/environments/README.md) If using pytorch create the Anaconda environment from the downloaded conda directory, open a terminal and type:
 
 ```
-conda env create -f airstack-infer.yml
+./conda_tensorrt_setup.sh airstack-infer.yml
 ```
 
 and activate the environment:
@@ -343,10 +343,3 @@ for AirStack 0.4.0+. For the simplicity of interacting with the AirStack drivers
 we recommend using the Python Packaging instead of Docker. The Python package should be
 installed in the
 [AirStack Anaconda environment](https://docs.deepwave.ai/Tutorials/conda/).
-
-&nbsp;
----
-[1] Note that the toolbox also includes the ability to convert a UFF file to a PLAN inference
-file using `tensorflow/uff2plan.py`. UFF files are used in a similar way as ONNX files but
-are being slowly deprecated. In addition, the number of supported layers in TensorRT is much
-larger for ONNX over UFF. For these reasons, best practice is to use the ONNX format.

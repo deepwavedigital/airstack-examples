@@ -54,19 +54,37 @@ class TrtInferFromPlan:
         with open(plan_file, 'rb') as f:
             trt_engine = deserializer(f.read())
 
-        # Perform data size/shape checks
-        _min_shape, _, max_shape = trt_engine.get_profile_shape(0, 0)
-        assert batch_size <= max_shape[0], 'Invalid batch size'
-        if batch_size != max_shape[0]:
-            warnings.warn('Unoptimized batch size detected', RuntimeWarning)
-        self._batch_size = batch_size
+        # Handle input/output layers, binding them to buffers
+        assert trt_engine.num_io_tensors == 2, \
+            "This example requires a network with one input and one output"
 
-        # Make assumptions about the input and output binding indexes. These should
-        # hold true if your model has one input and one output layer.
-        input_binding_index = 0
-        input_layer = trt_engine[input_binding_index]
-        output_binding_index = 1
-        output_layer = trt_engine[output_binding_index]
+        for i in range(trt_engine.num_io_tensors):
+            name = trt_engine.get_tensor_name(i)
+            mode = trt_engine.get_tensor_mode(name)
+            min_shape, _, max_shape = trt_engine.get_tensor_profile_shape(
+                name, 0)
+
+            if mode == trt.TensorIOMode.INPUT:
+                print(
+                    f"Input layer '{name}': min/max shape {min_shape}, {max_shape}")
+                assert batch_size <= max_shape[0], 'Invalid batch size'
+                if batch_size != max_shape[0]:
+                    warnings.warn(
+                        'Unoptimized batch size detected', RuntimeWarning)
+                self._batch_size = batch_size
+
+                input_binding_index = i
+                input_layer = name
+                input_shape = trt_engine.get_tensor_shape(name)
+                input_dtype = trt.nptype(trt_engine.get_tensor_dtype(name))
+            elif mode == trt.TensorIOMode.OUTPUT:
+                output_binding_index = i
+                output_layer = name
+                output_shape = trt_engine.get_tensor_shape(name)
+                output_dtype = trt.nptype(trt_engine.get_tensor_dtype(name))
+            else:
+                raise RuntimeError(
+                    f"Unsupported tensor mode for {name}: {mode}")
 
         # By default, the input and output shape do not account for the batch size.
         # For sanity, we take care of this now, and set the "N" dimension to the
@@ -74,10 +92,8 @@ class TrtInferFromPlan:
         # if the current N dimension is -1, we will have to later set the binding
         # shape when we create the inference context.
         batch_dim_index = 0
-        input_shape = trt_engine.get_binding_shape(input_layer)
         self._explicit_batch = (input_shape[batch_dim_index] == -1)
         input_shape[batch_dim_index] = self._batch_size
-        output_shape = trt_engine.get_binding_shape(output_layer)
         output_shape[batch_dim_index] = self._batch_size
 
         # Now we can sanity check the input buffer provided by the caller. The
@@ -85,16 +101,13 @@ class TrtInferFromPlan:
         # PLAN file.
         sdr_out_size = input_buffer.host.size
         trt_in_size = trt.volume(input_shape)
-        input_dtype = trt.nptype(trt_engine.get_binding_dtype(input_layer))
-        assert trt_in_size == sdr_out_size, 'Plan expected {} but got {} ' \
-                                            'samples'.format(
-                                                trt_in_size, sdr_out_size)
+        assert trt_in_size == sdr_out_size, \
+            f"Plan expected {trt_in_size} but got {sdr_out_size} samples"
         self.input_buff = input_buffer
 
         # For the output layer, we have a specified size and type from the PLAN
         # file. We use this info to create the output buffer for inference results.
         trt_out_size = trt.volume(output_shape)
-        output_dtype = trt.nptype(trt_engine.get_binding_dtype(output_layer))
         self.output_buff = MappedBuffer(trt_out_size, output_dtype)
 
         # Create inference context
@@ -104,8 +117,8 @@ class TrtInferFromPlan:
         # the binding shape now so that the batch size is accounted for in the
         # execution context.
         if self._explicit_batch:
-            self._infer_context.set_binding_shape(
-                input_binding_index, input_shape)
+            self._infer_context.set_input_shape(
+                input_layer, input_shape)
 
         if verbose:
             print('TensorRT Inference Settings:')
@@ -130,6 +143,7 @@ class TrtInferFromPlan:
         # Based on how the PLAN file was generated, we either have already accounted
         # for the batch size or need to specify it again.
         if self._explicit_batch:  # batch size previously accounted for
-            self._infer_context.execute_v2(buffers)
+            success = self._infer_context.execute_v2(buffers)
         else:
-            self._infer_context.execute(self._batch_size, buffers)
+            success = self._infer_context.execute(self._batch_size, buffers)
+        print(f"Status of inference operation: success = {success}")
