@@ -19,22 +19,34 @@ The 10.3 release can be found [here](https://developer.nvidia.com/downloads/comp
 
 ## Installation without TensorRT
 1. Copy the desired `.yml` file to your AIR-T
-2. Create the conda environment. This can take a few minutes 
+2. Create the conda build environment. This can take a few minutes and only needs to be done once. If you previously created this environment, you can skip to the next step.
     ```
-    conda env create -f <environment-name>
+    conda create -n build conda mamba
     ```
-3. Activate the conda environment
+3. Activate the conda build environment
+    ```
+    conda activate build
+    ```
+4. Create the conda environment. This can take a few minutes
+    ```
+    mamba env create -f <environment-name>
+    ```
+5. Activate the conda environment
     ```
     conda activate <environment-name>
     ```
 
 ## Installation with TensorRT
 1. Copy the desired `.yml` file to your AIR-T
-2. Create the conda environment and install tensorrt using the provided script. This can take a few minutes 
+2. Create the conda build environment. This can take a few minutes and only needs to be done once. If you previously created this environment, you can skip to the next step.
+    ```
+    conda create -n build conda mamba
+    ```
+3. Create the conda environment and install tensorrt using the provided script. This can take a few minutes
     ```
     conda_tensorrt_setup.sh <environment-name>
     ```
-3. Activate the conda environment
+4. Activate the conda environment
     ```
     conda activate <environment-name>
     ```
