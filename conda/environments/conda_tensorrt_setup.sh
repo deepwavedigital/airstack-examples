@@ -56,7 +56,7 @@ echo "📦 Using TensorRT wheel: $WHEEL_FILE"
 # ---- STEP 1: Create Conda environment ----
 echo "🚧 Creating Conda environment..."
 conda activate build
-mamba env create -f "$ENV_FILE"
+conda env create --solver=libmamba -f "$ENV_FILE"
 
 # Activate the environment
 eval "$(conda shell.bash hook)"

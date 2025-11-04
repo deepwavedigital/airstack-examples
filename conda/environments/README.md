@@ -29,7 +29,7 @@ The 10.3 release can be found [here](https://developer.nvidia.com/downloads/comp
     ```
 4. Create the conda environment. This can take a few minutes
     ```
-    mamba env create -f <environment-name>
+    conda env create --solver=libmamba -f <environment-name>
     ```
 5. Activate the conda environment
     ```
