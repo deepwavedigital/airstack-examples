@@ -25,4 +25,4 @@ dependencies:
   - pip:
      - onnx
      - onnxruntime
-     - torch
+     - torch @https://download.pytorch.org/whl/cu126/torch-2.6.0%2Bcu126-cp310-cp310-linux_aarch64.whl
