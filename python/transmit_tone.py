@@ -20,7 +20,7 @@ import sys
 import numpy as np
 import argparse
 import SoapySDR
-from SoapySDR import SOAPY_SDR_TX, SOAPY_SDR_CS16, errToStr
+from SoapySDR import SOAPY_SDR_TX, SOAPY_SDR_CS16, errToStr, SOAPY_SDR_END_BURST
 
 
 def make_tone(n, fcen, fs, phi=0.285):
@@ -68,9 +68,18 @@ def transmit_tone(freq, chan=0, fs=31.25e6, gain=-20, buff_len=16384):
     print('Now Transmitting')
     while True:
         try:
-            rc = sdr.writeStream(tx_stream, [tx_buff], buff_len)
+            # Note: we set the SOAPY_SDR_END_BURST flag here to indicate that
+            # gaps in transmission between each buffer (tone) are expected.
+            rc = sdr.writeStream(tx_stream, [tx_buff], buff_len,
+                                 flags=SOAPY_SDR_END_BURST)
             if rc.ret != buff_len:
-                print('TX Error {}: {}'.format(rc.ret, errToStr(rc.ret)))
+                print('TX Write Error {}: {}'.format(rc.ret, errToStr(rc.ret)))
+                continue
+            # Note: As of AirStack 2.3.1, users can check the stream status to
+            # verify that the transmission went out. This is an optional step.
+            rc = sdr.readStreamStatus(tx_stream, timeoutUs=30000000)
+            if rc.ret != 0:
+                print('TX Status Error {}: {}'.format(rc.ret, errToStr(rc.ret)))
         except KeyboardInterrupt:
             break
 
