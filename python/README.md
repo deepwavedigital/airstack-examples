@@ -12,5 +12,7 @@ Deepwave provides written tutorials [here](https://docs.deepwave.ai/Tutorials/) 
 
 * airt_record.py: Interact with the radio drivers, record N samples, save to a file and plot the saved signal
 
+* phase_calibration.py: Performs the required computations to phase align channels on the AIR-T. Contains a useful calibration class that can be leveraged for applications requiring phase aligned channels.
+
 * detect_and_repeat.py: Create a GPU power detector using CuPy, start a transmit task that sends any signal data array that is passed in to the AIR-T's RF transmitter, start the transceiver and continuously receive signal data, and repeat detected signals by sending them to the transmit task. 
     * **NOTE**: should be run using airstack-infer conda environment
